@@ -1,9 +1,6 @@
 MailParser
 ==========
 
-Introduction
-============
-
 Università di Catania -
 CdL Informatica Magistrale -
 Compilatori A.A 2014/15
@@ -12,6 +9,9 @@ Autors:
 - [Danilo Cantarella](https://github.com/Flyer-90);
 - [Sebastiano Siragusa](https://github.com/sebysira);
 - [Filippo Randazzo](https://github.com/filirnd);
+
+Introduction
+============
 
 mailParser is a project that allows you to clean up files to emails obtained by Crowler.
 The project was written in C and used mysql database.
