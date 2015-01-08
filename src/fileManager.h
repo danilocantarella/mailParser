@@ -11,7 +11,7 @@ Full MailParser is released by GPL3 licence.
 
 #include "config.h"
 #include "timerCalculator.h"
-#include "db.h"
+#include "pingDomain.h"
 
 void processDirectory();
 int processFile(char*, int);

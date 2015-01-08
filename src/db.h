@@ -306,6 +306,70 @@ void printToFile() {
 	executionTime(start_time);									/*get total execution time*/
 }
 
+/* Function that intialize domains table */
+void initTableDomains() {
+        checkDB();
+	MYSQL *conn;
+	int i;
+	char c;
+	char table[MAX];
+	char statement[MAX];
+	char* domain;
+	conn = connection();				
+	snprintf(statement, MAX, "CREATE TABLE IF NOT EXISTS domains (domain varchar(255) NOT NULL, n_mails int NULL, time varchar(255) NULL, date_ping date NULL, valid int NULL,  PRIMARY KEY (domain))");
+	query(conn, statement);
+	closeConnection(conn);
+	
+	conn = connection();	
+	snprintf(statement, MAX, "SELECT * FROM domains");
+	query(conn, statement);
+	MYSQL_RES* result = mysql_store_result(conn);
+	int n = mysql_num_rows(result);						/*number of rows from db*/
+	if(n > 0) {
+	      
+	      printf("Do you want update domains table before exec ping? (y/n) ");
+	      scanf(" %c", &c);
+	      if(c != 'y') return;
+	}
+	closeConnection(conn);	
+	
+	
+	for (i = 0; i < strlen(SYMBOL_TABLE); i++){
+		snprintf(table, MAX, "SELECT `mail` FROM `%c`", SYMBOL_TABLE[i]);			/*query all tables in db*/
+		conn = connection();
+		if (!mysql_query(conn, table)) {							/*exec select query*/
+			 MYSQL_RES* result = mysql_store_result(conn);
+			 int n = mysql_num_rows(result);						/*number of rows from db*/
+			 if(n > 0) {									/*if there are at least 1 row*/
+				printf("Extract domains from table %c\n", SYMBOL_TABLE[i]);
+				MYSQL_ROW row;
+				while ((row = mysql_fetch_row(result))) {				/*read all rows from db*/
+				      domain = strrchr(row[0], '@');	
+				      domain = strndup(domain + sizeof(char), sizeof(char)*strlen(domain));	
+				      snprintf(statement, MAX, "INSERT INTO domains (`domain`, `n_mails`, `valid`) VALUES ('%s', '%d', '%d')", domain, 1, 0);	/*Prepare insert query*/
+				      MYSQL *conn_d = connection();
+				      if(query(conn_d, statement) && c!= 'y') {
+					  snprintf(statement, MAX, "UPDATE `domains` SET `n_mails`=`n_mails`+ 1 WHERE `domain` = '%s'", domain);      
+					  query(conn_d, statement);
+						   
+				      }
+				      closeConnection(conn_d);
+				}
+				
+
+			}
+			mysql_free_result(result);
+		}
+		else
+			fprintf(stderr, "%s\n", mysql_error(conn));
+		closeConnection(conn);
+	}
+	
+	
+}
+
+
+
 
 /* Function that makes charapter to lower case*/
 void makeLower(char *input)

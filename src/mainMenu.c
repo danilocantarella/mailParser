@@ -32,13 +32,14 @@ int main() {
 		printf("\n _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n"
 		         "|            Menu             |\n"
 			 "|                             |\n"
-		     "|  1. Insert from directory   |\n"
+		         "|  1. Insert from directory   |\n"
 			 "|  2. Insert email manually   |\n"
 			 "|  3. Insert from file        |\n"
 			 "|  4. Search email            |\n"
 			 "|  5. Delete email            |\n"
 			 "|  6. Delete from file        |\n"
 			 "|  7. Export db               |\n"
+			 "|  8. Ping domains            |\n"
 			 "|  0. Exit                    |\n"
 			 "|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n"
 		         );
@@ -69,6 +70,9 @@ int main() {
 			break;
 
 		case 7: printToFile();			/*Export database on files (max 500 e-mails for file)*/
+			break;
+			
+		case 8: pingDomains();			/**/
 			break;
 
 		default:printf("Choice error!\n");	/*Wrong input from user*/
