@@ -306,6 +306,72 @@ void printToFile() {
 	executionTime(start_time);									/*get total execution time*/
 }
 
+/* Function that intialize domains table */
+void initTableDomains() {
+        checkDB();
+	MYSQL *conn;
+	int i;
+	char c;
+	char table[MAX], statement[MAX];
+	char* domain;
+	conn = connection();									/*prepare query to create domains table */
+	snprintf(statement, MAX, "CREATE TABLE IF NOT EXISTS domains (domain varchar(255) NOT NULL, n_mails int NULL, time varchar(255) NULL, date_ping date NULL, valid int NULL,  PRIMARY KEY (domain))");
+	query(conn, statement);
+	closeConnection(conn);
+
+	conn = connection();
+	snprintf(statement, MAX, "SELECT * FROM domains");				/*query to check if domains table is not empty */
+	query(conn, statement);
+	MYSQL_RES* result = mysql_store_result(conn);
+	int n = mysql_num_rows(result);						/*number of rows from domains table*/
+	if(n > 0) {								/*if there is at least one row, answer user if is necessary update domains table */
+	      printf("Do you want update domains table before exec ping? (y/n) ");
+	      scanf(" %c", &c);
+	      if(c != 'y')
+		    return;
+	      else {
+		    printf("Updating domains table...\n");
+		    MYSQL_ROW row;
+		    while ((row = mysql_fetch_row(result))) {					/*read all rows from domains table*/
+			   MYSQL *conn_d = connection();
+			   snprintf(statement, MAX, "UPDATE `domains` SET `n_mails`= 0 WHERE `domain` = '%s'", row[0]);    /*reset number of emails for every domain*/
+			   query(conn_d, statement);
+			   closeConnection(conn_d);
+		    }
+	      }
+	      mysql_free_result(result);
+	}
+	closeConnection(conn);
+
+	for (i = 0; i < strlen(SYMBOL_TABLE); i++){
+		snprintf(table, MAX, "SELECT `mail` FROM `%c`", SYMBOL_TABLE[i]);			/*query all tables in db*/
+		conn = connection();
+		if (!mysql_query(conn, table)) {							/*exec select query*/
+			 MYSQL_RES* result = mysql_store_result(conn);
+			 int n = mysql_num_rows(result);						/*number of rows from db*/
+			 if(n > 0) {									/*if there is at least 1 row*/
+				printf("Extract domains from table %c\n", SYMBOL_TABLE[i]);
+				MYSQL_ROW row;
+				while ((row = mysql_fetch_row(result))) {				/*read all rows from db*/
+				      domain = strrchr(row[0], '@');					/*extract domain part from email*/
+				      domain = strndup(domain + sizeof(char), sizeof(char)*strlen(domain));	/*cut the @*/
+				      snprintf(statement, MAX, "INSERT INTO domains (`domain`, `n_mails`, `valid`) VALUES ('%s', '%d', '%d')", domain, 1, 0);	/*Prepare insert query*/
+				      MYSQL *conn_d = connection();
+				      if(query(conn_d, statement)) {				/*if domain is already in table, update number of mails with this domain*/
+					  snprintf(statement, MAX, "UPDATE `domains` SET `n_mails`=`n_mails`+ 1 WHERE `domain` = '%s'", domain);
+					  query(conn_d, statement);
+				      }
+				      closeConnection(conn_d);
+				}
+			}
+			mysql_free_result(result);
+		}
+		else
+			fprintf(stderr, "%s\n", mysql_error(conn));
+		closeConnection(conn);
+	}
+}
+
 
 /* Function that makes charapter to lower case*/
 void makeLower(char *input)
