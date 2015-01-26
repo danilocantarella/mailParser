@@ -6,9 +6,9 @@ CdL Informatica Magistrale -
 Compilatori A.A 2014/15
 
 Autors:
-- [Danilo Cantarella](https://github.com/Flyer-90);
-- [Sebastiano Siragusa](https://github.com/sebysira);
-- [Filippo Randazzo](https://github.com/filirnd);
+- [Cantarella Danilo](https://github.com/Flyer-90);
+- [Randazzo Filippo](https://github.com/filirnd);
+- [Siragusa Sebastiano](https://github.com/sebysira);
 
 Introduction
 ============

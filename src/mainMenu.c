@@ -1,9 +1,9 @@
 /*
 This file is part of MailParser package.
 Writen by
-        - Danilo Cantarella (https://github.com/Flyer-90);
-        - Sebastiano Siragusa (https://github.com/sebysira);
-        - Filippo Randazzo (https://github.com/filirnd);
+        - Cantarella Danilo (https://github.com/Flyer-90);
+        - Randazzo Filippo (https://github.com/filirnd);
+        - Siragusa Sebastiano (https://github.com/sebysira);
 
 Full MailParser is released by GPL3 licence.
 */
@@ -87,9 +87,9 @@ int main() {
 /*
 This file is part of MailParser package.
 Writen by
-        - Danilo Cantarella (https://github.com/Flyer-90);
-        - Sebastiano Siragusa (https://github.com/sebysira);
-        - Filippo Randazzo (https://github.com/filirnd);
+        - Cantarella Danilo (https://github.com/Flyer-90);
+        - Randazzo Filippo (https://github.com/filirnd);
+        - Siragusa Sebastiano (https://github.com/sebysira);
 
 Full MailParser is released by GPL3 licence.
 */

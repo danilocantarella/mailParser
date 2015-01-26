@@ -1,9 +1,9 @@
 /*
 This file is part of MailParser package.
 Writen by
-        - Danilo Cantarella (https://github.com/Flyer-90);
-        - Sebastiano Siragusa (https://github.com/sebysira);
-        - Filippo Randazzo (https://github.com/filirnd);
+        - Cantarella Danilo (https://github.com/Flyer-90);
+        - Randazzo Filippo (https://github.com/filirnd);
+        - Siragusa Sebastiano (https://github.com/sebysira);
 
 Full MailParser is released by GPL3 licence.
 */
@@ -14,7 +14,7 @@ Full MailParser is released by GPL3 licence.
 int matchMail(regex_t, regex_t, char*, int);
 
 /*Function to check if a char* is a valid e-mail*/
-int matchMail(regex_t regex, regex_t regex2, char* token, int mode) {			/*mode = 0 for insert email, mode = 1 for delete email*/
+int matchMail(regex_t regex, regex_t regex2, char* token, int mode) {			/*mode = 1 for insert email, mode = 2 for delete email*/
 	MYSQL* conn;									/*Connection to db*/
 	int res, resSub, lenght;
 	bool warning = false;
@@ -63,9 +63,16 @@ int matchMail(regex_t regex, regex_t regex2, char* token, int mode) {			/*mode =
 
 				conn = connection();					/*Connect to db*/
 				if(!query(conn, statement)) {				/*Exec query*/
+				    int n_del = mysql_affected_rows(conn);
 				    closeConnection(conn);
 				    if(warning)
 				          return 0;					/*Return 0 if e-mail is warning*/
+				    if(mode == 2) {					/*check if delete mode*/
+				    	if(n_del == 1)						/*check if query deleted one e-mail*/
+							return 1;
+						else
+							return 0;
+					}
 				    return 1;						/*Return 1 for normal valid e-mail*/
 				}
 				else {
@@ -98,9 +105,9 @@ int matchMail(regex_t regex, regex_t regex2, char* token, int mode) {			/*mode =
 /*
 This file is part of MailParser package.
 Writen by
-        - Danilo Cantarella (https://github.com/Flyer-90);
-        - Sebastiano Siragusa (https://github.com/sebysira);
-        - Filippo Randazzo (https://github.com/filirnd);
+        - Cantarella Danilo (https://github.com/Flyer-90);
+        - Randazzo Filippo (https://github.com/filirnd);
+        - Siragusa Sebastiano (https://github.com/sebysira);
 
 Full MailParser is released by GPL3 licence.
 */
