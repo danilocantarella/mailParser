@@ -6,9 +6,9 @@ CdL Informatica Magistrale -
 Compilatori A.A 2014/15
 
 Autors:
-- [Cantarella Danilo](https://github.com/Flyer-90);
-- [Randazzo Filippo](https://github.com/filirnd);
-- [Siragusa Sebastiano](https://github.com/sebysira);
+- [Cantarella Danilo](https://github.com/Flyer-90) (http://cantarelladanilo.com);
+- [Randazzo Filippo](https://github.com/filirnd) (http://randazzofilippo.com);
+- [Siragusa Sebastiano](https://github.com/sebysira) (http://sebastianosiragusa.altervista.org);
 
 Introduction
 ============
@@ -27,6 +27,8 @@ Functionality
 - Delete emails in db
 - Delete emails from a single file
 - Export db into txt files with max 500 emails for file
+- Ping domains
+- Export only emails that have pinged domain
 
 Compile
 =======

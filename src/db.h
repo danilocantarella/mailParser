@@ -16,6 +16,7 @@ void initDB();
 void insertMail();
 void deleteMail();
 void printToFile();
+void printDomainsToFile();
 void searchMail();
 void makeLower(char *);
 
@@ -370,6 +371,75 @@ void initTableDomains() {
 			fprintf(stderr, "%s\n", mysql_error(conn));
 		closeConnection(conn);
 	}
+}
+
+/*Function that gets only mails that have pinged domain and save them into txt files with max 500 rows eachone */
+void printDomainsToFile() {
+	gettimeofday(&start_time,NULL); 								/*get current time*/
+	MYSQL *conn;
+	char table[MAX];
+	char* domain;
+	int i, nFolders = 0, nFiles = 0, nMail = 0;
+	mkdir("outputPing/", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);					/*create output directory*/
+	printf("\nExporting database to files...\n");
+
+	for (i = 0; i < strlen(SYMBOL_TABLE); i++){
+		snprintf(table, MAX, "SELECT `mail` FROM `%c`", SYMBOL_TABLE[i]);			/*query all tables in db*/
+		conn = connection();
+		if (!mysql_query(conn, table)) {							/*exec select query*/
+			 MYSQL_RES* result = mysql_store_result(conn);
+			 int n = mysql_num_rows(result);						/*number of rows from db*/
+			 if(n > 0) {									/*if there are at least 1 row*/
+				MYSQL_ROW row;
+				char nameFolder[MAX];
+				int counter = 0, nFile = 0;
+				snprintf(nameFolder, MAX, "outputPing/%c", SYMBOL_TABLE[i]);		/*set name of file*/
+				mkdir(nameFolder, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH); 		/*create folder for every table*/
+				snprintf(nameFolder, MAX, "outputPing/%c/%c_%d.txt", SYMBOL_TABLE[i], SYMBOL_TABLE[i], nFile);
+				FILE *output = fopen(nameFolder, "w+");					/*create output file*/
+				nFolders++;
+				nFiles++;
+				while ((row = mysql_fetch_row(result))) {				/*read all rows from db*/
+					domain = strrchr(row[0], '@');					/*extract domain part from email*/
+				    domain = strndup(domain + sizeof(char), sizeof(char)*strlen(domain));	/*cut the @*/
+					MYSQL *conn_domain = connection();
+					snprintf(table, MAX, "SELECT `valid` FROM `domains` WHERE `domain` = \"%s\" ", domain);		/*query to check if domain is pinged*/
+					if (!mysql_query(conn_domain, table)) {							/*exec select query*/
+						MYSQL_RES* result_domain = mysql_store_result(conn_domain);
+			 			MYSQL_ROW row_domain = mysql_fetch_row(result_domain);
+			 			if(atoi(row_domain[0]) == 0) {				/*check if domain not reply to ping*/
+			 				closeConnection(conn_domain);
+			 				continue;
+			 			}
+			 			closeConnection(conn_domain);
+			 		}
+			 		nMail++;
+					if(counter == MAX_MAIL) {					/*if file is full, close it and create new file*/
+						fclose(output);
+						nFile++;						/*change number of file*/
+						snprintf(nameFolder, MAX, "outputPing/%c/%c_%d.txt", SYMBOL_TABLE[i], SYMBOL_TABLE[i], nFile);  /*prepare new filename*/
+						output = fopen(nameFolder, "w+");			/*create new output file*/
+						counter = 0;						/*reset line counter*/
+						nFiles++;
+					}
+					if(counter < (MAX_MAIL - 1) && counter < (n-1-MAX_MAIL*nFile))
+					  fprintf(output, "%s,\n", row[0]);
+					else
+					  fprintf(output, "%s,", row[0]);
+					counter++;
+				}
+				fclose(output);
+
+			}
+			mysql_free_result(result);
+		}
+		else
+			fprintf(stderr, "%s\n", mysql_error(conn));
+		closeConnection(conn);
+	}
+
+	printf("Have been exported %d email in %d files in a total of %d folders.\n", nMail, nFiles, nFolders);
+	executionTime(start_time);									/*get total execution time*/
 }
 
 

@@ -38,8 +38,9 @@ int main() {
 			 "|  4. Search email            |\n"
 			 "|  5. Delete email            |\n"
 			 "|  6. Delete from file        |\n"
-			 "|  7. Export db               |\n"
-			 "|  8. Ping domains            |\n"
+			 "|  7. Ping domains            |\n"
+			 "|  8. Export all db           |\n"
+			 "|  9. Export pinged domains   |\n"
 			 "|  0. Exit                    |\n"
 			 "|_ _ _ _ _ _ _ _ _ _ _ _ _ _ _|\n"
 		         );
@@ -69,12 +70,15 @@ int main() {
 		case 6: deleteFromFile();     /* Delete mails from only file*/
 			break;
 
-		case 7: printToFile();			/*Export database on files (max 500 e-mails for file)*/
-			break;
-			
-		case 8: pingDomains();			/**/
+		case 7: pingDomains();			/*Ping all domains*/
 			break;
 
+		case 8: printToFile();			/*Export database on files (max 500 e-mails for file)*/
+			break;
+
+		case 9: printDomainsToFile();			/*Export only emails that have domain pinged (max 500 e-mails for file)*/
+			break;
+			
 		default:printf("Choice error!\n");	/*Wrong input from user*/
 			break;
 		}
