@@ -21,7 +21,7 @@ void searchMail();
 void makeLower(char *);
 
 struct timeval start_time;								/* Struct to store initial timestamp */
-char SYMBOL_TABLE[] = "0123456789abcdefghijklmnopqrstuvwxyz!#$%&'*+-/=?^_{|}~";		/*Names of all tables*/
+char SYMBOL_TABLE[] = "0123456789abcdefghijklmnopqrstuvwxyz!#$%&'+-/=?^_{|}~";		/*Names of all tables*/
 
 
 /* Connection to DB function */

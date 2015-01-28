@@ -25,7 +25,7 @@ Full MailParser is released by GPL3 licence.
 #define CHARGAP 48
 #define MAX 256
 #define MAX_MAIL 500
-#define MAX_LENGHT 1024
+#define MAX_LENGHT 10240
 #define DATA_SIZE 512
 #define LENGHT_MAIL 40
 #define LENGHT_DOMAIN 25
